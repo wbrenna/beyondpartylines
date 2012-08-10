@@ -53,6 +53,7 @@ in the order of decreasing vote number. The reason labelling is nontrivial is
 because you may have skipped votes, and vote data may go between parliamentary
 sittings. For example, if you voted on issues 445, 440, 441, and 404, the Hinton
 plot would be a 2x2 grid as follows:
+
 	445	441
 	440	404
 
