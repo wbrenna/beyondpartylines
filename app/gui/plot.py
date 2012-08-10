@@ -1,7 +1,12 @@
-import numpy as N
-import pylab as P
-import math
+#import numpy as N
+from numpy import array as narray
+from numpy import sqrt,max,abs
+#import pylab as P
+from math import ceil
 
+#import matplotlib.use
+#matplotlib.use('TkAgg')
+import matplotlib.pyplot as P
 
 #The following two definitions are helpfully from the Matplotlib Cookbook
 #www.scipy.org/Cookbook/Matplotlib/HintonDiagrams. I've modified them here.
@@ -10,9 +15,9 @@ def _blob(x,y,area,colour):
 	Draws a square-shaped blob with the given area (< 1) at
 	the given coordinates.
 	"""
-	hs = N.sqrt(area) / 2
-	xcorners = N.array([x - hs, x + hs, x + hs, x - hs])
-	ycorners = N.array([y - hs, y - hs, y + hs, y + hs])
+	hs = sqrt(area) / 2
+	xcorners = narray([x - hs, x + hs, x + hs, x - hs])
+	ycorners = narray([y - hs, y - hs, y + hs, y + hs])
 	P.fill(xcorners, ycorners, colour, edgecolor=colour)
 
 def hinton(W, length, maxWeight=None):
@@ -28,9 +33,9 @@ def hinton(W, length, maxWeight=None):
 	height, width = W.shape
 	if not maxWeight:
 		#maxWeight = 2**N.ceil(N.log(N.max(N.abs(W)))/N.log(2))
-		maxWeight = N.max(N.abs(W))*1.2
+		maxWeight = max(abs(W))*1.2
 
-	P.fill(N.array([0,width,width,0]),N.array([0,0,height,height]),'gray')
+	P.fill(narray([0,width,width,0]),narray([0,0,height,height]),'gray')
 	P.axis('off')
 	P.axis('equal')
 	correlationcounter = 0
@@ -84,9 +89,9 @@ def splitarr(seq, num):
 	return out
 
 def squareandhinton(correlationlist):
-	lengthint = math.ceil(math.sqrt(len(correlationlist)))
+	lengthint = ceil(sqrt(len(correlationlist)))
 	
-	array = P.array(splitarr(correlationlist,lengthint))
+	array = narray(splitarr(correlationlist,lengthint))
 	hinton(array,len(correlationlist))
 
 

@@ -1,25 +1,39 @@
 BeyondPartyLines
----------------
+===============
 
 This suite will prompt you at your leisure for your personal voting decisions, 
 logging these and allowing you to compare them with Canadian Members of Parliament. 
 Become a member of the House of Commons! 
 
 
+
+
+Install
+=======
+
 If you are fortunate enough to have acquired a binary/executable for the program, 
 simply launch it. Otherwise, you will need Python (I used Python2.6, your results 
 may vary with other versions) and a fair list of dependencies, such as 
 
-Python/ttk,
 BeautifulSoup,
-urllib2,
-xml
-matplotlib (scilab, numpy)
+matplotlib,
+numpy,
+pyttk
 
 
 Run the application with
 
-python trackyourvote.py
+python beyondpartylines.py
+
+
+Equivalently, this application can be setup with setuptools by running
+
+python setup.py
+
+
+
+Run
+====
 
 The application window will pop up. Initially the list of votes will be unpopulated. 
 Click "Download" to download votes from the last vote in currentsitting.dat. The 

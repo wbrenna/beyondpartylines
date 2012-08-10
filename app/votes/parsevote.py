@@ -1,5 +1,5 @@
 import parliamentdatastructs
-import fileinput
+#import fileinput
 import os
 import re
 
