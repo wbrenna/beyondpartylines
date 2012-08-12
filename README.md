@@ -11,25 +11,97 @@ Become a member of the House of Commons!
 Install
 =======
 
-If you are fortunate enough to have acquired a binary/executable for the program (there might be some at <wbrenna.uwaterloo.ca/projects/beyondpartylines.php>), 
+If you are fortunate enough to have acquired a binary/executable for the program 
+(there might be some at 
+[wbrenna.uwaterloo.ca](http://wbrenna.uwaterloo.ca/projects/beyondpartylines.php)), 
 simply launch it. Otherwise, you will need Python (I used Python2.6, your results 
-may vary with other versions) and a fair list of dependencies, such as 
+may vary with other versions) and a few dependencies:
 
 	BeautifulSoup,
 	matplotlib,
 	numpy,
-	pyttk
+	pyttk (which requires Tk wrappers for Python)
 
+The easiest method of installation on systems with a good package manager (for example, 
+apt). Here, simply install the prerequisites:
 
-Run the application with
+	sudo apt-get install python-numpy matplotlib python-tk python-beautifulsoup
+
+Then, run the application with
 
 	python beyondpartylines.py
 
 
-Equivalently, this application can be setup with setuptools by running
+If, for some reason, you cannot install the dependencies as above, this application 
+can be setup in two other ways.
 
-	python setup.py
+Install with pip
+----------------
 
+First, ensure you have pip and virtualenv installed. Start a virtualenv with 
+
+	virtualenv --no-site-packages bpl_env
+	. bpl_env/bin/activate
+
+Then, you can install the packages required with 
+
+	pip install -r pipdeps.txt
+
+If you get an error like this:
+
+	BUILDING MATPLOTLIB
+
+            matplotlib: 1.1.0
+
+                python: 2.6.6 (r266:84292, Dec 26 2010, 22:31:48)  [GCC 4.4.5]
+
+              platform: linux2
+
+
+
+	REQUIRED DEPENDENCIES
+
+                 numpy: no
+
+                        * You must install numpy 1.1 or later to build
+
+                        * matplotlib.
+		
+you likely have to install numpy first. This is a known bug in pip, and it also
+occurs with setuptools (below), meaning you have to satisfy the numpy
+dependencies before the installation will go on. You simply need to run
+
+	pip install numpy
+
+followed by 
+
+	pip install -r pipdeps.txt
+
+Then, while you are still in the virtualenv, you can run the software with
+
+	python beyondpartylines.py
+
+To exit the virtualenv, type
+
+	deactivate
+
+and to reenter the virtualenv (to run the software again) run
+
+	. bpl_env/bin/activate
+
+again. It is that easy!
+
+
+Install with setuptools
+-----------------------
+
+You do not need 
+
+	sudo python setup.py install
+
+I have never actually been able to get this approach to work, since building numpy 
+and matplotlib with setuptools has always broken on my systems. One thing that
+may help would be installing the Python headers (python2.6-dev on my system).
 
 
 Run

@@ -1,5 +1,5 @@
 #For setuptools
-import ez_setup.py
+import ez_setup
 
 ez_setup.use_setuptools()
 
@@ -10,11 +10,11 @@ setup(
 	packages = find_packages(),
 	scripts = ['beyondpartylines.py'],
 
-	install_requires = ['numpy>=1.5.1','matplotlib>=1.0.1','pyttk>=0.3.2','BeautifulSoup>=3.2.0']
+	install_requires = ['numpy>=1.5.1','matplotlib>=1.0.1','pyttk>=0.3.2','BeautifulSoup>=3.2.0'],
 
 	package_data = {
 		'' : ['README','LICENSE','currentsitting.dat']
-	}
+	},
 
 	author = "Wilson Brenna",
 	author_email = "wbrenna@uwaterloo.ca",
