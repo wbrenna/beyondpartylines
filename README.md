@@ -95,13 +95,27 @@ again. It is that easy!
 Install with setuptools
 -----------------------
 
-You do not need 
+This option will automatically install setuptools for you, if you do not have
+it. You will likely have to preinstall numpy (see above).
 
 	sudo python setup.py install
 
 I have never actually been able to get this approach to work, since building numpy 
 and matplotlib with setuptools has always broken on my systems. One thing that
 may help would be installing the Python headers (python2.6-dev on my system).
+
+
+
+Lingering Errors
+----------------
+
+If you still have problems, feel free to send me an email. One issue that
+appears common on Ubuntu is the error
+
+	No module named _tkagg
+
+or similar. This can be fixed by removing the matplotlibrc file.
+
 
 
 Run
