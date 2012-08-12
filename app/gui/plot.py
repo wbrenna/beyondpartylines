@@ -20,7 +20,7 @@ def _blob(x,y,area,colour):
 	ycorners = narray([y - hs, y - hs, y + hs, y + hs])
 	P.fill(xcorners, ycorners, colour, edgecolor=colour)
 
-def hinton(W, length, maxWeight=None):
+def hinton(W, length, name, maxWeight=None):
 	"""
 	Draws a Hinton diagram for visualizing a weight matrix. 
 	Temporarily disables matplotlib interactive mode if it is on, 
@@ -54,7 +54,7 @@ def hinton(W, length, maxWeight=None):
 		
 	
 	correlationindex = abs(correlationcounter/length*100 + 50)
-	titlestring = str(correlationindex) + '% agreement' 
+	titlestring = 'My votes versus ' + name + ': ' + str(correlationindex) + '% agreement' 
 
 	P.title(titlestring)
 	if reenable:
@@ -88,10 +88,10 @@ def splitarr(seq, num):
 
 	return out
 
-def squareandhinton(correlationlist):
+def squareandhinton(correlationlist,name):
 	lengthint = ceil(sqrt(len(correlationlist)))
 	
 	array = narray(splitarr(correlationlist,lengthint))
-	hinton(array,len(correlationlist))
+	hinton(array,len(correlationlist),name)
 
 

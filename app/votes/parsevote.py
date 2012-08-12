@@ -1,5 +1,4 @@
 import parliamentdatastructs
-#import fileinput
 import os
 import re
 
@@ -29,7 +28,6 @@ def returnvotes(votearray,datadir):
 	filelist.sort()
 	#print filelist[1]
 	numfiles = len(filelist)
-	#global votearray = list()
 
 	for name in filelist:
 		tmp = parliamentdatastructs.votedata()

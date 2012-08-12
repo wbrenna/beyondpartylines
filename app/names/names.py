@@ -123,6 +123,9 @@ def plotvotes(key):
 			print "Error in parsing votes!"
 			return 1
 
-	plot.squareandhinton(correlation)
+	root = tree.getroot()
+	#mpname = root.find("FirstName").text + ' ' + root.find("LastName").text
+	mpname = root.find("Member").find("Name").text
+	plot.squareandhinton(correlation,mpname)
 
 
