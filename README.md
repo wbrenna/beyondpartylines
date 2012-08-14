@@ -25,7 +25,7 @@ may vary with other versions) and a few dependencies:
 The easiest method of installation on systems with a good package manager (for example, 
 apt). Here, simply install the prerequisites:
 
-	sudo apt-get install python-numpy matplotlib python-tk python-beautifulsoup
+	sudo apt-get install python-numpy python-matplotlib python-tk python-beautifulsoup
 
 Then, run the application with
 
