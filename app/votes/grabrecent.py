@@ -48,9 +48,16 @@ def recentvotes(currentsitting,datadir,cursitting):
 			myxml = urllib2.urlopen(xmlurl)
 			tree = etree.parse(myxml)
 		except Exception, e:
-			print "Error downloading/parsing %s" % xmlurl
-			print e
-			break
+			try:
+				y += 1
+				xmlurl = XML % {'parliamentnum' : currentsitting.parl, 'sessnum' : currentsitting.ses, 'votenum' : y}
+				myxml = urllib2.urlopen(xmlurl)
+				tree = etree.parse(myxml)
+			except Exception, e:
+				#print "No vote exists at %s" % xmlurl
+				#print e
+				y -= 1
+				break
 
 
 		root = tree.getroot()
@@ -98,8 +105,9 @@ def recentvotes(currentsitting,datadir,cursitting):
 			currentsitting.ses += 1
 			recentvotes(currentsitting,0,cursitting)
 	except Exception, e:
-		print "Error downloading/parsing %s" % xmlurl
-		print e
+		#print "No vote exists at %s" % xmlurl
+		#print e
+		pass
 
 
 	xmlurl = XML % {'parliamentnum' : currentsitting.parl+1, 'sessnum' : 1, 'votenum' : 1}
@@ -112,8 +120,8 @@ def recentvotes(currentsitting,datadir,cursitting):
 			currentsitting.ses = 1
 			recentvotes(currentsitting,0,cursitting)
 	except Exception, e:
-		print "Error downloading/parsing %s" % xmlurl
-		print e
+		#print "No vote exists at %s" % xmlurl
+		print "We have probably downloaded all available votes. If you are unsure please view currentsitting.dat and compare with openparliament.ca." 
 
 
 
