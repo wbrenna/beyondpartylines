@@ -28,6 +28,10 @@ def searchforvote(xmltree,votenum,counter):
 	mpvotes = root.findall("Vote")
 	firstvote = int(mpvotes[0].attrib['number'])
 	votenum2 = int(votenum)
+	if (firstvote-votenum2+i < 0):
+#This means the starting vote doesn't yet exist in the database.
+#For now mark it as abstain, just like missing votes.
+		return 0
 	myvote = mpvotes[firstvote - votenum2 + i]
 	myvotenum = int(myvote.attrib['number'])
 	if (myvotenum < votenum2):
