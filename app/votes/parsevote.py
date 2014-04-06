@@ -10,6 +10,18 @@ def sort_file(filename):
 		if not line:
 			break
 		lines.append(line.rstrip())
+#Check for duplicate votes
+	duparr=[]
+	tmp = ''
+	for line in lines:
+		tmp = line.split(' ')
+		duparr.append(tmp[0]+tmp[1]+tmp[2])
+	
+	duparr2 = set(duparr)
+	if len(duparr2) != len(duparr):
+		print "You voted for the same thing twice! I'm deleting the duplicate (newer) vote: " + lines[len(duparr)-1] + "."
+		del lines[len(duparr)-1]
+		
 	lines.sort(reverse=True)
 	filehandl.close()
 	filehandl = open(filename,"w")
@@ -70,7 +82,6 @@ def writevote(votedata,vote,datadir,votename):
 			print "Problem opening file!"
 			print e
 			return 0
-
 
 		votefile = open(votename,"a")
 

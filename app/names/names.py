@@ -28,8 +28,14 @@ def searchforvote(xmltree,votenum,counter):
 	mpvotes = root.findall("Vote")
 	firstvote = int(mpvotes[0].attrib['number'])
 	votenum2 = int(votenum)
+	if (firstvote-votenum2+i < 0):
+#Here this means that the starting vote doesn't exist in this person's database yet.
+#We need to wait until it's added, but for now abstain
+		print "Returning zero for MP vote ",firstvote," and user vote ",votenum2
+		return 0
 	myvote = mpvotes[firstvote - votenum2 + i]
 	myvotenum = int(myvote.attrib['number'])
+	print "Parsing MP vote ",myvote.attrib['number']," and user vote ",votenum2
 	if (myvotenum < votenum2):
 		while (myvotenum < votenum2):
 #			print counter[0], myvote.attrib['number'], votenum2
@@ -51,8 +57,10 @@ def searchforvote(xmltree,votenum,counter):
 		return 0
 
 	if myvote.find("RecordedVote").find("Yea").text == "1":
+		print ":yea"
 		return 1
 	elif myvote.find("RecordedVote").find("Nay").text == "1":
+		print ":nea"
 		return -1
 	elif myvote.find("RecordedVote").find("Paired").text == "1":
 #For now, I mark paired as the same as abstain

@@ -6,6 +6,8 @@ from app.votes import parliamentdatastructs,parsevote,grabrecent
 from app.names import names
 import platform
 import os
+import tkMessageBox
+import copy
 
 #Make sure the directory structure is setup properly
 if platform.system() == 'Windows':
@@ -16,6 +18,9 @@ else:
 if not os.path.exists(datadir):
 	os.makedirs(datadir)
 
+cursitting = 'currentsitting.dat'
+currentsitting = parliamentdatastructs.currentsessionofparliament()
+checksitting = parliamentdatastructs.currentsessionofparliament()
 
 
 class voteGui():
@@ -37,8 +42,18 @@ class voteGui():
 		"""
 		This function downloads the new votes automatically.
 		"""
-		grabrecent.go()
-		self.refresh_list()
+		if(grabrecent.getcurrentsitting(cursitting,currentsitting,checksitting)):
+#Now grab the votes and download them
+			grabrecent.go(cursitting,datadir,currentsitting)
+			self.refresh_list()
+		else:
+#Check to see a delay - if so, popup and ask
+			#print checksitting.last
+			#print currentsitting.last
+			self.popupsittingchoice()
+			#grabrecent.go(cursitting,datadir,newsitting)
+			#self.refresh_list()
+
 
 	def refresh_list(self):
 		"""
@@ -138,6 +153,38 @@ class voteGui():
 		self.popup.abutton2.grid(row=2, column=1, sticky=Tkinter.W)
 		self.popup.entry.bind('<Return>', self.runcomp)
 
+	def popupusecurrent(self):
+		#newsitting = currentsitting
+		grabrecent.go(cursitting,datadir,currentsitting)
+		#print currentsitting.last
+		self.refresh_list()
+		#self.popup.destroy()
+
+	def popupusechosen(self):
+		grabrecent.go(cursitting,datadir,checksitting)
+		#print checksitting.last
+		self.refresh_list()
+		#self.popup.destroy()
+
+	def popupsittingchoice(self):
+		#self.popup = Tkinter.Toplevel()
+		#self.popup.transient(parent=self)
+		#self.popup.desc = ttk.Label(self.popup, text="It has been a while since updating. \nSelect either the most recent sitting (\"Current\") or \n download all (\"All\").")
+		#self.popup.desc.grid(row=0,columnspan=4)
+		#self.popup.abutton1 = ttk.Button(self.popup, text='All', command=self.popupusechosen)
+		#self.popup.abutton1.grid(row=2, column=0, sticky=Tkinter.W)
+		#self.popup.abutton2 = ttk.Button(self.popup, text='Current', command=self.popupusecurrent)
+		#self.popup.abutton2.grid(row=2, column=1, sticky=Tkinter.W)
+
+		answer = tkMessageBox.askyesno("Stale Database", "It has been a while since updating. Jump to the most recent sitting (\"Yes\")? Otherwise we will download all votes since last time (\"No\").")
+		if (answer):
+			self.popupusecurrent()
+		else:
+			self.popupusechosen()
+
+		#self.popup.entry1.bind('<Return>', self.popupusecurrent)
+		#self.popup.entry2.bind('<Return>', self.popupusecurrent)
+		#self.popup.entry3.bind('<Return>', self.popupusecurrent)
 
 
 	def __init__(self,parent):
