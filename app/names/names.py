@@ -29,14 +29,8 @@ def searchforvote(xmltree,votenum,counter):
 	firstvote = int(mpvotes[0].attrib['number'])
 	votenum2 = int(votenum)
 	if (firstvote-votenum2+i < 0):
-<<<<<<< HEAD
-#Here this means that the starting vote doesn't exist in this person's database yet.
-#We need to wait until it's added, but for now abstain
-		print "Returning zero for MP vote ",firstvote," and user vote ",votenum2
-=======
 #This means the starting vote doesn't yet exist in the database.
 #For now mark it as abstain, just like missing votes.
->>>>>>> 573c5cfa28175e9220599a527bca3e5a6f81d414
 		return 0
 	myvote = mpvotes[firstvote - votenum2 + i]
 	myvotenum = int(myvote.attrib['number'])
