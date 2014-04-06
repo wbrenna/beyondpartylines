@@ -158,5 +158,15 @@ appears common on Ubuntu is the error
 or similar. This can be fixed by removing the matplotlibrc file or by changing
 the backend specified in matplotlibrc.
 
+Also, when the parliament breaks XML links for votes, you might encounter some
+errors when trying to download votes. Manually edit the file currentsitting.dat
+with the current session, sitting, and vote number.
+
+If you ever need to correct any votes, you can always roll the vote number back
+in currentsitting.dat and delete the relevant lines in votes.dat, then re-download
+and re-vote. Duplicate votes in votes.dat are automatically removed. Remember that
+MPs are not allowed to roll back votes, though, so perhaps you should follow their
+example!
+
 
 
