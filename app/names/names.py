@@ -35,27 +35,27 @@ def searchforvote(xmltree,votenum,counter):
 	#firstvote = int(mpvotes[0].attrib['number'])
 	firstvote = int(mpvotes[0].find('DecisionDivisionNumber').text)
 	votenum2 = int(votenum)
-	if (firstvote-votenum2+i < 0):
+	if (firstvote > votenum2):
 #This means the starting vote doesn't yet exist in the database.
 #For now mark it as abstain, just like missing votes.
 		return 0
-	myvote = mpvotes[firstvote - votenum2 + i]
-	myvotenum = int(myvote.find['DecisionDivisionNumber'].text)
+	myvote = mpvotes[firstvote + i]
+	myvotenum = int(myvote.find('DecisionDivisionNumber').text)
 	print "Parsing MP vote ",myvote.find('DecisionDivisionNumber').text," and user vote ",votenum2
 	if (myvotenum < votenum2):
 		while (myvotenum < votenum2):
 #			print counter[0], myvote.attrib['number'], votenum2
-			i -= 1
-			myvote = mpvotes[firstvote - votenum2 + i]
+			i += 1
+			myvote = mpvotes[firstvote + i]
 			myvotenum = int(myvote.find('DecisionDivisionNumber').text)
 	elif (myvotenum > votenum2):
                 while (myvotenum > votenum2):
 #			print counter[0], myvote.attrib['number'], votenum2
-                        i += 1
-                        myvote = mpvotes[firstvote - votenum2 + i]
+                        i -= 1
+                        myvote = mpvotes[firstvote + i]
 			myvotenum = int(myvote.find('DecisionDivisionNumber').text)
 	counter[0] = i
-	print "Final value:", counter[0], myvote.attrib['number'], votenum2
+	#print "Final value:", counter[0], myvote.attrib['number'], votenum2
 
 	if (int(myvote.find('DecisionDivisionNumber').text) != int(votenum)):
 #This means we couldn't find the vote - Abstain!
@@ -63,13 +63,14 @@ def searchforvote(xmltree,votenum,counter):
 		return 0
 
 	#if myvote.find("RecordedVote").find("Yea").text == "1":
-	if myvote.find("VoteValueName").find("Yea").text == "1":
+	votestate = myvote.find("VoteValueName").text
+	if votestate == "Yea":
 		print ":yea"
 		return 1
-	elif myvote.find("VoteValueName").find("Nay").text == "1":
+	elif votestate == "Nay":
 		print ":nea"
 		return -1
-	elif myvote.find("VoteValueName").find("Paired").text == "1":
+	elif votestate == "Paired":
 #For now, I mark paired as the same as abstain
 		return 0
 
