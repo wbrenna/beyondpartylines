@@ -9,59 +9,67 @@ from app.gui import plot
 def searchforkey(string):
 	URL = "http://www.parl.gc.ca/Search/Results.aspx?Language=E&search_term=%s" % string.replace(" ", "%20")
 	key = ""
+	urlname = ""
 	print URL
 	try:
 		searchresult = BeautifulSoup(urllib2.urlopen(URL),parseOnlyThese=SoupStrainer('a'))
 	except Exception, e:
 		print e
 		return ""
-	myresult =  searchresult.findAll(href=re.compile("http://www.parl.gc.ca/MembersOfParliament/ProfileMP.*Language=E"))
+	myresult =  searchresult.findAll(href=re.compile("http://www.parl.gc.ca/Parliamentarians/en/members/.*\(.*\)"))
 	for result in myresult:
 		key = re.findall(r'\d+',result['href'])[0].encode('utf-8')
+		urlname = re.findall(r'\/[A-Za-z]*-[A-Za-z]*\(',result['href'])[0].encode('utf-8')[1:-1]
+		break
+	print key
+	print urlname
 	
-	return key
+	return [key,urlname]
 
 
 def searchforvote(xmltree,votenum,counter):
 	i = counter[0]
 	root = xmltree.getroot()
-	mpvotes = root.findall("Vote")
-	firstvote = int(mpvotes[0].attrib['number'])
+	#mpvotes = root.findall("Vote")
+	mpvotes = root.findall("VoteParticipant")
+	#firstvote = int(mpvotes[0].attrib['number'])
+	firstvote = int(mpvotes[0].find('DecisionDivisionNumber').text)
 	votenum2 = int(votenum)
 	if (firstvote-votenum2+i < 0):
 #This means the starting vote doesn't yet exist in the database.
 #For now mark it as abstain, just like missing votes.
 		return 0
 	myvote = mpvotes[firstvote - votenum2 + i]
-	myvotenum = int(myvote.attrib['number'])
-	print "Parsing MP vote ",myvote.attrib['number']," and user vote ",votenum2
+	myvotenum = int(myvote.find['DecisionDivisionNumber'].text)
+	print "Parsing MP vote ",myvote.find('DecisionDivisionNumber').text," and user vote ",votenum2
 	if (myvotenum < votenum2):
 		while (myvotenum < votenum2):
 #			print counter[0], myvote.attrib['number'], votenum2
 			i -= 1
 			myvote = mpvotes[firstvote - votenum2 + i]
-			myvotenum = int(myvote.attrib['number'])
+			myvotenum = int(myvote.find('DecisionDivisionNumber').text)
 	elif (myvotenum > votenum2):
                 while (myvotenum > votenum2):
 #			print counter[0], myvote.attrib['number'], votenum2
                         i += 1
                         myvote = mpvotes[firstvote - votenum2 + i]
-			myvotenum = int(myvote.attrib['number'])
+			myvotenum = int(myvote.find('DecisionDivisionNumber').text)
 	counter[0] = i
-#	print "Final value:", counter[0], myvote.attrib['number'], votenum2
+	print "Final value:", counter[0], myvote.attrib['number'], votenum2
 
-	if (int(myvote.attrib['number']) != int(votenum)):
+	if (int(myvote.find('DecisionDivisionNumber').text) != int(votenum)):
 #This means we couldn't find the vote - Abstain!
 		#print "Couldn't find vote - we were at %(mv)s which didn't match the wanted vote number %(vn)s." % {'mv' : str(myvote.attrib['number']), 'vn' : votenum}
 		return 0
 
-	if myvote.find("RecordedVote").find("Yea").text == "1":
+	#if myvote.find("RecordedVote").find("Yea").text == "1":
+	if myvote.find("VoteValueName").find("Yea").text == "1":
 		print ":yea"
 		return 1
-	elif myvote.find("RecordedVote").find("Nay").text == "1":
+	elif myvote.find("VoteValueName").find("Nay").text == "1":
 		print ":nea"
 		return -1
-	elif myvote.find("RecordedVote").find("Paired").text == "1":
+	elif myvote.find("VoteValueName").find("Paired").text == "1":
 #For now, I mark paired as the same as abstain
 		return 0
 
@@ -69,9 +77,32 @@ def searchforvote(xmltree,votenum,counter):
 		print "There appears to have been an error. Vote data may not be reliable."
 		return 0	
 
+def sesstoSessionId(ses, parl):
+	sesval = parl*10 + ses
 
-def plotvotes(key):
-	URL = "http://www.parl.gc.ca/MembersOfParliament/ProfileMP.aspx?key=%(thekey)s&SubSubject=1006&Language=E&FltrParl=%(parlnum)s&FltrSes=%(sessnum)s&VoteType=0&AgreedTo=True&Negatived=True&Tie=True&Page=1&xml=true&SchemaVersion=1.0"
+	if sesval == 381:
+		return 140
+	elif sesval == 391:
+		return 141
+	elif sesval == 392:
+		return 142
+	elif sesval == 401:
+		return 143
+	elif sesval == 402:
+		return 145
+	elif sesval == 403:
+		return 147
+	elif sesval == 411:
+		return 150
+	elif sesval == 412:
+		return 151
+	else:
+		print "There was an error converting to SessionId. Please contact the developer!"
+		return -1
+
+def plotvotes(key,urlname):
+	#URL = "http://www.parl.gc.ca/MembersOfParliament/ProfileMP.aspx?key=%(thekey)s&SubSubject=1006&Language=E&FltrParl=%(parlnum)s&FltrSes=%(sessnum)s&VoteType=0&AgreedTo=True&Negatived=True&Tie=True&Page=1&xml=true&SchemaVersion=1.0"
+	URL = "http://www.parl.gc.ca/Parliamentarians/en/members/%(theurlname)s(%(thekey)s)/ExportVotes?sessionId=%(sessnum)s&output=XML"
 	filename = "votes.dat"
 	filehndl = open(filename,"r")
 	lines = []
@@ -99,7 +130,8 @@ def plotvotes(key):
 			vdata.decision = tmp[3]
 		else:
 #download the XML file
-			xmlURL = URL % {'parlnum' : vdata.parl, 'sessnum' : vdata.ses, 'thekey' : key}
+			#xmlURL = URL % {'parlnum' : vdata.parl, 'sessnum' : vdata.ses, 'thekey' : key}
+			xmlURL = URL % {'theurlname' : urlname, 'sessnum' : sesstoSessionId(int(vdata.ses),int(vdata.parl)), 'thekey' : key}
 			try:
 				myXML = urllib2.urlopen(xmlURL)
 				tree = etree.parse(myXML)
@@ -132,7 +164,8 @@ def plotvotes(key):
 
 	root = tree.getroot()
 	#mpname = root.find("FirstName").text + ' ' + root.find("LastName").text
-	mpname = root.find("Member").find("Name").text
+	#mpname = root.find("Member").find("Name").text
+	mpname = urlname
 	plot.squareandhinton(correlation,mpname)
 
 

@@ -133,13 +133,13 @@ class voteGui():
 
 	def runcomp(self, event):
 		mpname = self.popup.entry.get()
-		key = names.searchforkey(mpname)
-		names.plotvotes(key)
+		[key,urlname] = names.searchforkey(mpname)
+		names.plotvotes(key,urlname)
 
 	def runcomp2(self):
 		mpname = self.popup.entry.get()
-		key = names.searchforkey(mpname)
-		names.plotvotes(key)
+		[key,urlname] = names.searchforkey(mpname)
+		names.plotvotes(key,urlname)
 
 
 	def comparevote(self):
