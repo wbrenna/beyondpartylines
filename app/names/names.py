@@ -41,7 +41,8 @@ def searchforvote(xmltree,votenum,counter):
 		return 0
 	myvote = mpvotes[firstvote + i]
 	myvotenum = int(myvote.find('DecisionDivisionNumber').text)
-	print "Parsing MP vote ",myvote.find('DecisionDivisionNumber').text," and user vote ",votenum2
+	#print "Parsing MP vote ",myvote.find('DecisionDivisionNumber').text," and user vote ",votenum2
+	print "Parsing vote ",votenum2
 	if (myvotenum < votenum2):
 		while (myvotenum < votenum2):
 #			print counter[0], myvote.attrib['number'], votenum2
@@ -55,11 +56,12 @@ def searchforvote(xmltree,votenum,counter):
                         myvote = mpvotes[firstvote + i]
 			myvotenum = int(myvote.find('DecisionDivisionNumber').text)
 	counter[0] = i
-	#print "Final value:", counter[0], myvote.attrib['number'], votenum2
+	#print "Final value:", counter[0], myvote.find('DecisionDivisionNumber').text, votenum2
 
 	if (int(myvote.find('DecisionDivisionNumber').text) != int(votenum)):
 #This means we couldn't find the vote - Abstain!
 		#print "Couldn't find vote - we were at %(mv)s which didn't match the wanted vote number %(vn)s." % {'mv' : str(myvote.attrib['number']), 'vn' : votenum}
+		print "This politician didn't vote on vote number ", int(votenum)
 		return 0
 
 	#if myvote.find("RecordedVote").find("Yea").text == "1":

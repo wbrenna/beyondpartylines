@@ -47,7 +47,7 @@ def returnvotes(votearray,datadir):
 		tmp2 = re.split('_',name)
 		tmp.ses = tmp2[1]
 		tmp.parl = tmp2[0]
-		tmp.vote = votefile.readline().rstrip()
+		tmp.vote = str(int(votefile.readline().rstrip()))
 		tmp.bill = votefile.readline().rstrip()
 		tmp.title = votefile.readline().rstrip()
 		tmp.decision = votefile.readline().rstrip()
@@ -91,7 +91,7 @@ def writevote(votedata,vote,datadir,votename):
 		description = datafile.readline()
 		datafile.close()
 
-		myvotedata = str(votedata.parl) + " " + str(votedata.ses) + " " + str(votedata.vote) + " " + str(vote)
+		myvotedata = str(votedata.parl) + " " + str(votedata.ses) + " " + str(votedata.vote).zfill(3) + " " + str(vote)
 		votefile.write(myvotedata + "\n")
 		votefile.close()
 
