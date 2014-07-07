@@ -13,7 +13,7 @@ Install
 
 If you are fortunate enough to have acquired a binary/executable for the program 
 (there might be some at 
-[wbrenna.uwaterloo.ca](http://wbrenna.uwaterloo.ca/wilson/projects/beyondpartylines.php)), 
+[wbrenna.ca](http://wbrenna.ca/wilson/projects/beyondpartylines.php)), 
 simply launch it. Otherwise, you will need Python (I used Python2.6, your results 
 may vary with other versions) and a few dependencies:
 
